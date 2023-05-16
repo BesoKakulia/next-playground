@@ -1,6 +1,4 @@
-import Image from "next/image";
-import Link from "next/link";
-import Form from "@/components/Login";
+import Form from "../components/Login";
 
 export default function Home() {
   return (

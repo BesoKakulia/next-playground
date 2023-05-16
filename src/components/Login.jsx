@@ -3,9 +3,27 @@
 import React from "react";
 import { Label, TextInput, Checkbox, Button } from "flowbite-react";
 
-function Form() {
+const Login = () => {
+  const submitHandler = (event) => {
+    event.preventDefault();
+    console.log(event.target.elements);
+    const [email, password] = event.target.elements;
+    console.log({ email: email.value, password: password.value });
+
+    fetch("/api/auth/login", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ email: email.value, password: password.value }),
+    });
+  };
+
   return (
-    <form className="flex flex-col gap-4 w-2/5 align-middle justify-center">
+    <form
+      className="flex flex-col gap-4 w-2/5 align-middle justify-center"
+      onSubmit={submitHandler}
+    >
       <div>
         <div className="mb-2 block">
           <Label htmlFor="email1" value="Your email" />
@@ -13,7 +31,8 @@ function Form() {
         <TextInput
           id="email1"
           type="email"
-          placeholder="name@flowbite.com"
+          placeholder="email@example.com"
+          value={"email@example.com"}
           required={true}
         />
       </div>
@@ -21,7 +40,12 @@ function Form() {
         <div className="mb-2 block">
           <Label htmlFor="password1" value="Your password" />
         </div>
-        <TextInput id="password1" type="password" required={true} />
+        <TextInput
+          id="password1"
+          type="password"
+          value={"pass"}
+          required={true}
+        />
       </div>
       <div className="flex items-center gap-2">
         <Checkbox id="remember" />
@@ -32,6 +56,6 @@ function Form() {
       </Button>
     </form>
   );
-}
+};
 
-export default Form;
+export default Login;
