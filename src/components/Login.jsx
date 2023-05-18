@@ -2,20 +2,35 @@
 
 import React from "react";
 import { Label, TextInput, Checkbox, Button } from "flowbite-react";
+import { useSession } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 
 const Login = () => {
-  const submitHandler = (event) => {
-    event.preventDefault();
-    console.log(event.target.elements);
-    const [email, password] = event.target.elements;
-    console.log({ email: email.value, password: password.value });
+  const { data: session } = useSession();
+  console.log({ session });
 
-    fetch("/api/auth/login", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify({ email: email.value, password: password.value }),
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    const SERVER = "http://localhost";
+    const [username, password] = event.target.elements;
+    // const response = await fetch(`http://localhost:5000/auth/login`, {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     username: username.value,
+    //     password: password.value,
+    //   }),
+    //   headers: {
+    //     "Access-Control-Allow-Origin": "*",
+    //     "Content-Type": "application/json",
+    //   },
+    // });
+
+    // const data = await response.json();
+    // console.log(data);
+    signIn("credentials", {
+      username: username.value,
+      password: password.value,
+      redirect: false,
     });
   };
 
@@ -26,13 +41,12 @@ const Login = () => {
     >
       <div>
         <div className="mb-2 block">
-          <Label htmlFor="email1" value="Your email" />
+          <Label htmlFor="username" value="Your username" />
         </div>
         <TextInput
-          id="email1"
-          type="email"
-          placeholder="email@example.com"
-          value={"email@example.com"}
+          id="username"
+          type="text"
+          placeholder="Gendalf"
           required={true}
         />
       </div>
@@ -40,12 +54,7 @@ const Login = () => {
         <div className="mb-2 block">
           <Label htmlFor="password1" value="Your password" />
         </div>
-        <TextInput
-          id="password1"
-          type="password"
-          value={"pass"}
-          required={true}
-        />
+        <TextInput id="password1" type="password" required={true} />
       </div>
       <div className="flex items-center gap-2">
         <Checkbox id="remember" />
